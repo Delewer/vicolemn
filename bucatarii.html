@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+   .container { 
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Added to allow the cards to wrap to the next line */
+      gap: 20px; /* Added to create space between cards */
+      margin-top: 50px;
+    }
+
+    .card {
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:hover {
+      border-color: #aaa;
+    }
+
+    .card__image {
+      width: 300px;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .enlarged {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .enlarged img {
+      max-width: 80%;
+      max-height: 80%;
+      object-fit: contain;
+    }
+
+    .arrow {
+      cursor: pointer;
+      font-size: 24px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      display: none;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+
+.bg_b {
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.bg_b img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.main-nav {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      text-align: center;
+      background: url('b_bg.jpeg');
+      opacity: 0;
+      z-index: -1;
+      visibility: hidden;
+      transition: all .375s;
+    }
+
+    @media only screen and (max-width: 450px) {
+        .container { 
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Added to allow the cards to wrap to the next line */
+      gap: 20px; /* Added to create space between cards */
+      margin-top: 2000px;
+    }
+    }
+
+  </style>
+
+<button id="burger" class="open-main-nav">
+    <span class="burger"></span>
+    <span class="burger-text">Menu</span>
+  </button>
+  <nav class="main-nav" id="main-nav">
+    <ul>
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a href="about.html">Despre noi</a>
+      </li>
+      <li>
+        <a href="contacts.html">Contacte</a>
+      </li>
+    </ul>
+  </nav>
+<script src="script.js" ></script>
+
+</head>
+<body>
+    <div class="bg_b"> 
+        <img src="b_bg.jpg" alt="bg_b">
+    </div>
+
+    <div class="container">
+    <div class="card" onclick="toggleEnlarge('Товар 1', ['b/b1 (1).jpg', 'b/b1 (2).jpg'])">
+      <img src="b/b1 (1).jpg" alt="Товар 1" class="card__image">
+    </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 2', ['b/b2 (1).jpg', 'b/b2 (2).jpg', 'b/b2 (3).jpg', 'b/b2 (4).jpg'])">
+      <img src="b/b2 (1).jpg" alt="Товар 2" class="card__image">
+      </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 3', ['b/b3.jpg'])">
+      <img src="b/b3.jpg" alt="Товар 3" class="card__image">
+    </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 4', ['b/b4 (1).jpg', 'b/b4 (2).jpg', 'b/b4 (3).jpg', 'b/b4 (4).jpg'])">
+      <img src="b/b4 (1).jpg" alt="Товар 4" class="card__image">
+    </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 5', ['b/b5.jpg','b/b5 (2).jpg', 'b/b5 (3).jpg'])">
+      <img src="b/b5.jpg" alt="Товар 5" class="card__image">
+    </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 6', ['b/b6 (1).jpg', 'b/b6 (2).jpg'])">
+      <img src="b/b6 (1).jpg" alt="Товар 6" class="card__image">
+      </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 7', ['b/b7.jpg'])">
+      <img src="b/b7.jpg" alt="Товар 7" class="card__image">
+    </div>
+
+    <div class="card" onclick="toggleEnlarge('Товар 8', ['b/b8.jpg'])">
+        <img src="b/b8.jpg" alt="Товар 8" class="card__image">
+      </div>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
+
+  <script>
+  let currentImageIndex = 0;
+
+  function toggleEnlarge(productName, imageArray) {
+    const enlargedContainer = document.querySelector('.enlarged');
+    if (!enlargedContainer) {
+      showImageInEnlarge(imageArray[currentImageIndex], productName, imageArray);
+    }
+  }
+
+  function showImageInEnlarge(imageSrc, productName, imageArray) {
+    const enlargedContainer = document.createElement('div');
+    enlargedContainer.classList.add('enlarged');
+
+    const enlargedImage = document.createElement('img');
+    enlargedImage.src = imageSrc;
+    enlargedImage.alt = productName;
+
+    const leftArrow = document.createElement('div');
+    leftArrow.classList.add('arrow', 'left');
+    leftArrow.onclick = () => changeImageInEnlarge(-1, enlargedImage, imageArray);
+    leftArrow.innerHTML = '&#9665;';
+
+    const rightArrow = document.createElement('div');
+    rightArrow.classList.add('arrow', 'right');
+    rightArrow.onclick = () => changeImageInEnlarge(1, enlargedImage, imageArray);
+    rightArrow.innerHTML = '&#9655;';
+
+    enlargedContainer.appendChild(enlargedImage);
+    enlargedContainer.appendChild(leftArrow);
+    enlargedContainer.appendChild(rightArrow);
+
+    enlargedContainer.addEventListener('click', (event) => {
+      if (!event.target.classList.contains('arrow')) {
+        enlargedContainer.remove();
+      }
+    });
+
+    document.body.appendChild(enlargedContainer);
+
+    leftArrow.style.display = 'block';
+    rightArrow.style.display = 'block';
+
+    // Initialize Hammer.js for swipe gestures
+    const hammertime = new Hammer(enlargedContainer);
+    hammertime.on('swipeleft', () => changeImageInEnlarge(1, enlargedImage, imageArray));
+    hammertime.on('swiperight', () => changeImageInEnlarge(-1, enlargedImage, imageArray));
+  }
+
+  function changeImageInEnlarge(direction, enlargedImage, imageArray) {
+    currentImageIndex += direction;
+
+    if (currentImageIndex < 0) {
+      currentImageIndex = imageArray.length - 1;
+    } else if (currentImageIndex >= imageArray.length) {
+      currentImageIndex = 0;
+    }
+
+    enlargedImage.src = imageArray[currentImageIndex];
+  }
+</script>
+
+
+
+</body>
+</html>

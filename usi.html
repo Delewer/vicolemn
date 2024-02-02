@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <style>
+   .container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap; /* Added to allow the cards to wrap to the next line */
+      gap: 20px; /* Added to create space between cards */
+      margin-top: 50px;
+    }
+
+    .card {
+      margin: 10px;
+      cursor: pointer;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .card:hover {
+      border-color: #aaa;
+    }
+
+    .card__image {
+      width: 300px;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .enlarged {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+    }
+
+    .enlarged img {
+      max-width: 80%;
+      max-height: 80%;
+      object-fit: contain;
+    }
+
+    .arrow {
+      cursor: pointer;
+      font-size: 24px;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      color: white;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 10px;
+      display: none;
+    }
+
+    .left {
+      left: 0;
+    }
+
+    .right {
+      right: 0;
+    }
+
+    .main-nav {
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      text-align: center;
+      background: url('d_bg.jpeg');
+      opacity: 0;
+      z-index: -1;
+      visibility: hidden;
+      transition: all .375s;
+    }
+
+.bg_b {
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.bg_b img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+  </style>
+
+<button id="burger" class="open-main-nav">
+    <span class="burger"></span>
+    <span class="burger-text">Menu</span>
+  </button>
+  <nav class="main-nav" id="main-nav">
+    <ul>
+      <li>
+        <a href="index.html">Home</a>
+      </li>
+      <li>
+        <a href="about.html">Despre noi</a>
+      </li>
+      <li>
+        <a href="contacts.html">Contacte</a>
+      </li>
+    </ul>
+  </nav>
+<script src="script.js" ></script>
+
+</head>
+<body>
+    <div class="bg_b"> 
+        <img src="d_bg.jpg" alt="bg_b">
+    </div>
+
+    <div class="container">
+    <div class="card" onclick="toggleEnlarge('Товар 1', ['d/d (1).jpg', 'd/d (2).jpg', 'd/d (3).jpg', 'd/d (4).jpg'])">
+      <img src="d/d (1).jpg" alt="Товар 1" class="card__image">
+    </div>
+    <div class="card" onclick="toggleEnlarge('Товар 1', ['d/d2 (1).jpg', 'd/d2 (2).jpg', 'd/d2 (3).jpg', 'd/d2 (4).jpg', 'd/d2 (5).jpg', 'd/d2 (6).jpg'])">
+        <img src="d/d2 (1).jpg" alt="Товар 2" class="card__image">
+    </div>
+      <div class="card" onclick="toggleEnlarge('Товар 1', ['d/d3 (1).jpg', 'd/d3 (2).jpg', 'd/d3 (3).jpg', 'd/d3 (4).jpg','d/d3 (5).jpg', 'd/d3 (6).jpg', 'd/d3 (7).jpg', 'd/d3 (8).jpg','d/d3 (9).jpg', 'd/d3 (10).jpg', 'd/d3 (11).jpg'])">
+        <img src="d/d3 (1).jpg" alt="Товар 3" class="card__image">
+    </div>
+    <div class="card" onclick="toggleEnlarge('Товар 1', ['d/d4 (1).jpg', 'd/d4 (2).jpg', 'd/d4 (3).jpg', 'd/d4 (4).jpg','d/d4 (5).jpg', 'd/d4 (6).jpg', 'd/d4 (7).jpg', 'd/d4 (8).jpg'])">
+        <img src="d/d4 (1).jpg" alt="Товар 4" class="card__image">
+    </div>
+
+
+
+  </div>
+  
+  <script>
+    let currentImageIndex = 0;
+
+    function toggleEnlarge(productName, imageArray) {
+      const enlargedContainer = document.querySelector('.enlarged');
+      if (!enlargedContainer) {
+        showImageInEnlarge(imageArray[currentImageIndex], productName, imageArray);
+      }
+    }
+
+    function showImageInEnlarge(imageSrc, productName, imageArray) {
+      const enlargedContainer = document.createElement('div');
+      enlargedContainer.classList.add('enlarged');
+
+      const enlargedImage = document.createElement('img');
+      enlargedImage.src = imageSrc;
+      enlargedImage.alt = productName;
+
+      const leftArrow = document.createElement('div');
+      leftArrow.classList.add('arrow', 'left');
+      leftArrow.onclick = () => changeImageInEnlarge(-1, enlargedImage, imageArray);
+      leftArrow.innerHTML = '&#9665;';
+
+      const rightArrow = document.createElement('div');
+      rightArrow.classList.add('arrow', 'right');
+      rightArrow.onclick = () => changeImageInEnlarge(1, enlargedImage, imageArray);
+      rightArrow.innerHTML = '&#9655;';
+
+      enlargedContainer.appendChild(enlargedImage);
+      enlargedContainer.appendChild(leftArrow);
+      enlargedContainer.appendChild(rightArrow);
+
+      enlargedContainer.addEventListener('click', (event) => {
+        if (!event.target.classList.contains('arrow')) {
+          enlargedContainer.remove();
+        }
+      });
+
+      document.body.appendChild(enlargedContainer);
+
+      leftArrow.style.display = 'block';
+      rightArrow.style.display = 'block';
+    }
+
+    function changeImageInEnlarge(direction, enlargedImage, imageArray) {
+      currentImageIndex += direction;
+
+      if (currentImageIndex < 0) {
+        currentImageIndex = imageArray.length - 1;
+      } else if (currentImageIndex >= imageArray.length) {
+        currentImageIndex = 0;
+      }
+
+      enlargedImage.src = imageArray[currentImageIndex];
+    }
+  </script>
+
+
+</body>
+</html>
